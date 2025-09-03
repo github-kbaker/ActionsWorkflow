@@ -1,0 +1,23 @@
+What it is
+
+GitHub Actions (CI): runs builds/tests/scans, builds a container, signs it, and pushes it to a registry. Outputs are artifacts + image tags and a Git commit updating your deploy manifests.
+
+Argo CD (CD/GitOps): watches a Git repo path (Helm/Kustomize/manifests). When it sees changes, it syncs the desired state to Kubernetes (deploy/rollback, drift detection, health checks).
+
+Reference architecture (at a glance)
+
+Source: GitHub monorepo (app + infra).
+
+CI: GitHub Actions runners (hosted/self-hosted).
+
+Registry: GHCR/ECR/GCR (immutable tags + signatures).
+
+Manifests: Helm chart or Kustomize overlays per env (dev/stage/prod).
+
+CD: Argo CD in each cluster; App of Apps for multi-service, or one Application per service/env.
+
+Auth: OIDC between Actions ↔ cloud/registry; Argo CD ↔ Git via deploy key or PAT.
+
+Policy: branch protections, required reviews, environment approvals; (optional) OPA/Gatekeeper & Argo Rollouts.
+
+Repo layout (example)
